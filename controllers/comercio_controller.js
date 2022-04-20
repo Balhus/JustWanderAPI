@@ -21,22 +21,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single('file');
 
-//GET ALL COMERCE
+//GET ALL COMMERCE
 router.get('/', (req, res) => {
     Comercio.findAll()
-        .then(user => res.status(200).json({ ok: true, data: user }))
+        .then(x => res.status(200).json({ ok: true, data: x }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-//FIND A COMERCE
+//FIND A COMMERCE
 router.get('/:id', (req, res) => {
     const { id } = req.params;
     Comercio.findOne({ where: { id: id } })
-        .then(user => res.status(200).json({ ok: true, data: user }))
+        .then(x => res.status(200).json({ ok: true, data: x }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-//INSERT NEW COMERCE
+//GETS ALL THE FILTERS OF A COMMERCE
+router.get('/filtrosComercio/:id', (req, res) => {
+    const { id } = req.params;
+    FiltroComercio.findAll({ where: { id_comercio: id } })
+        .then(x => res.status(200).json({ ok: true, data: x }))
+        .catch(err => res.status(400).json({ ok: false, data: err }))
+})
+
+//GETS ALL THE COMMERCES WITH THE GIVEN FILTER
+router.get('/filtrar/:id', (req, res) => {
+    const { id } = req.params;
+    FiltroComercio.findAll({ where: { id_filtro: id } })
+        .then(x => res.status(200).json({ ok: true, data: x }))
+        .catch(err => res.status(400).json({ ok: false, data: err }))
+})
+
+
+//INSERT NEW COMMERCE
 router.get('/new', (req, res) => {
 
     const comercio = {
@@ -93,7 +110,7 @@ router.get('/new', (req, res) => {
 })
 
 
-//DELETE AN COMERCE
+//DELETE AN COMMERCE
 router.get('/delete/:id', (req, res) => {
     const { id } = req.params;
     Comercio.destroy({ where: { id: id } })
@@ -101,7 +118,7 @@ router.get('/delete/:id', (req, res) => {
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-//FIND a COMERCE BY userId
+//FIND a COMMERCE BY userId
 router.get('/user/:id', (req, res) => {
     const { id } = req.params;
     Comercio.findOne({ where: { usuario_creador: id } })
