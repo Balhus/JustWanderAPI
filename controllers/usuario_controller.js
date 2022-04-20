@@ -37,13 +37,15 @@ router.put('/edit/:id',(req,res) => {
 //LOGIN
 router.post('/login', (req, res) => {
     const response = {};
-    const { email, password } = req.body;
+    const { email, user, password } = req.body;
+    //Checks if is by email or user, and sets the one that is given
+    const emailOrUser = email === "" ? user : email;
     
-    if (!email || !password) {
+    if (!emailOrUser || !password) {
         return res.status(400).json({ ok: false, msg: "email or password not received" })
     }
 
-    Usuario.findOne({ where: { email } })
+    Usuario.findOne({ where: { emailOrUser } })
         .then((usuari) => {
             // bcrypt.compareSync(password, usuari.password)
             if (usuari) {
@@ -56,7 +58,7 @@ router.post('/login', (req, res) => {
             response.token = jsonwebtoken.sign(
                 {
                     expiredAt: new Date().getTime() + expiredAfter,
-                    email,
+                    emailOrUser,
                     nombre_usuario: usuari.nombre_usuario,
 
                 },
