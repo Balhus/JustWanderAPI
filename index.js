@@ -3,6 +3,7 @@ const cors = require('cors');
 
 const userController = require('./controllers/usuario_controller');
 const comerceController = require('./controllers/comercio_controller');
+const filterController = require('./controllers/filtro_controller');
 
 const app = express();
 
@@ -13,10 +14,12 @@ app.use(cors()); //evita problemas al conectar desde otro servidor
 app.get('/', (req, res) => {
     res.json(`API PROYECTO ENFOCAT
     - /api/usuario
-    - /api/comercio`)
+    - /api/comercio
+    - /api/filtro`)
 })
 app.use('/api/usuario', userController);
 app.use('/api/comercio', comerceController);
+app.use('/api/filtro', filterController);
 
 const port = 3030
 app.listen(port, () => console.log(`Express en puerto ${port}!`))

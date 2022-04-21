@@ -1,12 +1,11 @@
 const express = require('express');
-const jsonwebtoken = require('jsonwebtoken');
-const Config = require('./config');
 const model = require('../models/index');
 const multer = require('multer');
 
 const Comercio = model.Comercio;
 const Foto = model.Foto;
 const FiltroComercio = model.FiltroComercio;
+const Filtro = model.Filtro;
 
 const router = express.Router();
 
@@ -36,19 +35,39 @@ router.get('/:id', (req, res) => {
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-//GETS ALL THE FILTERS OF A COMMERCE
+/*GETS ALL THE FILTERS OF A COMMERCE
+*Return: returns the filters, the full registerr, not just the id
+*/
 router.get('/filtrosComercio/:id', (req, res) => {
     const { id } = req.params;
     FiltroComercio.findAll({ where: { id_comercio: id } })
-        .then(x => res.status(200).json({ ok: true, data: x }))
+        .then(x => {
+            const idFiltros = x.map((fil)=>{
+                return fil.id_filtro
+            })
+
+            Filtro.findAll({where: {id: idFiltros}})
+            .then((y) => res.status(200).json({ ok: true, data: y }))
+        })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-//GETS ALL THE COMMERCES WITH THE GIVEN FILTER
-router.get('/filtrar/:id', (req, res) => {
-    const { id } = req.params;
+/*GETS ALL THE COMMERCES WITH THE GIVEN FILTERS
+*id: array of id's
+*Return: returns the commerces, the full register, not just the id
+*/
+router.post('/filtrar', (req, res) => {
+    const { id } = req.body;
+    console.log(id)
     FiltroComercio.findAll({ where: { id_filtro: id } })
-        .then(x => res.status(200).json({ ok: true, data: x }))
+        .then(x => {
+            const idComercios = x.map((come)=>{
+                return come.id_comercio
+            })
+
+            Comercio.findAll({where : {id: idComercios}})
+            .then((y) => res.status(200).json({ ok: true, data: y }))  
+        })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
