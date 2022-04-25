@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({ storage: storage }).single('file');
+const upload = multer({ storage: storage }).array('files');
 
 //GET ALL COMMERCE
 router.get('/', (req, res) => {
@@ -42,12 +42,12 @@ router.get('/filtrosComercio/:id', (req, res) => {
     const { id } = req.params;
     FiltroComercio.findAll({ where: { id_comercio: id } })
         .then(x => {
-            const idFiltros = x.map((fil)=>{
+            const idFiltros = x.map((fil) => {
                 return fil.id_filtro
             })
 
-            Filtro.findAll({where: {id: idFiltros}})
-            .then((y) => res.status(200).json({ ok: true, data: y }))
+            Filtro.findAll({ where: { id: idFiltros } })
+                .then((y) => res.status(200).json({ ok: true, data: y }))
         })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
@@ -61,71 +61,84 @@ router.post('/filtrar', (req, res) => {
     console.log(id)
     FiltroComercio.findAll({ where: { id_filtro: id } })
         .then(x => {
-            const idComercios = x.map((come)=>{
+            const idComercios = x.map((come) => {
                 return come.id_comercio
             })
 
-            Comercio.findAll({where : {id: idComercios}})
-            .then((y) => res.status(200).json({ ok: true, data: y }))  
+            Comercio.findAll({ where: { id: idComercios } })
+                .then((y) => res.status(200).json({ ok: true, data: y }))
         })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
 
 //INSERT NEW COMMERCE
-router.get('/new', (req, res) => {
+router.post('/new', (req, res, next) => {
+    console.log(req.body)
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
 
-    const comercio = {
-        nombre: req.body.name,
-        descripcion: req.body.description,
-        direccion: req.body.address,
-        longitud: req.body.longitude,
-        latitud: req.body.latitude,
-        usuario_creador: req.body.idUser,
-        revisado: 0
-    }
-    let idComercioCreado = 0;
-    Comercio.create({ comercio })
-        .then(comerc => {
-            idComercioCreado = comerc.id;
-            upload(req, res, function (err) {
-                if (err instanceof multer.MulterError) {
-                    return res.status(500).json(err)
-                } else if (err) {
-                    return res.status(500).json(err)
-                }
+        if (!req.files) {
+            res.status(400).json({ ok: false, error: "Missing file(foto)" });
+        } else {
+            const comercio = {
+                nombre: req.body.name,
+                descripcion: req.body.description,
+                direccion: req.body.address,
+                longitud: req.body.longitude,
+                latitud: req.body.latitude,
+                usuario_creador: req.body.idUser,
+                revisado: 0
+            }
+        
+            let idComercioCreado = 0;
 
-                if (!req.file) {
-                    res.status(400).json({ ok: false, error: "Missing file(foto)" });
-                } else {
-                    const fotos = {
-                        idComercio: idComercioCreado,
-                        nombre_img: req.file.filename
+            Comercio.create(comercio)
+                .then(comerc => {
+                    idComercioCreado = comerc.dataValues.id;
+
+                    let fotosName = req.files;
+                    let fotos = []
+                    for (let i = 0; i < fotosName.length; i++) {
+                        fotos.push(
+                            {
+                                idComercio: idComercioCreado,
+                                nombre_img: fotosName[i].filename
+                            }
+                        )
+                    }
+                    Foto.bulkCreate(fotos)
+                        //.then(a => res.json({ ok: true, foto: a }))
+                        //.catch(e => res.json({ ok: false, error: e, from: "Foto.BulkCreate" }));
+
+                })
+                .then(() => {
+                    let filtersFromBody = req.body.filter
+                    let filters = []
+
+                    for (let i = 0; i < filtersFromBody.length; i++) {
+                        filters.push(
+                            {
+                                id_comercio: idComercioCreado,
+                                id_filtro: filtersFromBody[i]
+                            }
+                        )
                     }
 
-                    Foto.create(fotos)
-                        .then(a => res.json({ ok: true, foto: a }))
-                        .catch(e => res.json({ ok: false, error: e }));
-                }
-            })
-        })
-        .then(() => {
-            let filters=[]
-            filters = (req.body.filter).map(el => {
-                return (
-                    {
-                        id_comercio: idComercioCreado,
-                        id_filtro: el.id 
-                    }
-                );
-            });
-            
-            //Crear filtro create
-            FiltroComercio.bulkCreate(filters)
-                        .then(a => res.json({ ok: true, filtro: a }))
-                        .catch(e => res.json({ ok: false, error: e }));
-        })
-        .catch(err => res.status(400).json({ ok: false, data: err }))
+                    console.log(filters)
+                    //Crear filtro create
+                    FiltroComercio.bulkCreate(filters)
+                        //.then(a => res.json({ ok: true, filtro: a }))
+                        //.catch(e => res.json({ ok: false, error: e, from: "FiltroComercio.BulkCreate" }));
+                })
+                .then(a => res.json({ ok: true, data: a }))
+                .catch(err => res.status(400).json({ ok: false, data: err}))
+        }
+    })
 })
 
 
