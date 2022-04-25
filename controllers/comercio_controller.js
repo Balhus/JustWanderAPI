@@ -129,7 +129,7 @@ router.get('/new', (req, res) => {
 })
 
 
-//DELETE AN COMMERCE
+//DELETE A COMMERCE
 router.get('/delete/:id', (req, res) => {
     const { id } = req.params;
     Comercio.destroy({ where: { id: id } })
