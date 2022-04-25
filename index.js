@@ -5,6 +5,7 @@ const userController = require('./controllers/usuario_controller');
 const comerceController = require('./controllers/comercio_controller');
 const filterController = require('./controllers/filtro_controller');
 const newsletterController = require('./controllers/newsletter_controller');
+const seguidoresController = require('./controllers/seguidores_controller')
 
 const app = express();
 
@@ -16,12 +17,15 @@ app.get('/', (req, res) => {
     res.json(`API PROYECTO ENFOCAT
     - /api/usuario
     - /api/comercio
-    - /api/filtro`)
+    - /api/filtro
+    - /api/newsletter
+    - /api/seguidores`)
 })
 app.use('/api/usuario', userController);
 app.use('/api/comercio', comerceController);
 app.use('/api/filtro', filterController);
-app.use('/api/newsletter', newsletterController)
+app.use('/api/newsletter', newsletterController);
+app.use('/api/seguidores', seguidoresController);
 
 const port = 3030
 app.listen(port, () => console.log(`Express en puerto ${port}!`))

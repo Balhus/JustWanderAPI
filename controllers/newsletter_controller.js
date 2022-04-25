@@ -13,6 +13,9 @@ router.get('/', (req, res) => {
     .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
+
+//filter NEW USER (EMAIL AND ID USER)
+
 router.post('/filter', (req, res) => {
     const { email } = req.body;
 
