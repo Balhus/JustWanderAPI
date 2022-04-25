@@ -39,16 +39,17 @@ router.post('/login', (req, res) => {
     const response = {};
     const { email, user, password } = req.body;
     //Checks if is by email or user, and sets the one that is given
-    const emailOrUser = email === "" ? user : email;
+    const emailOrUser = email === "" ? {nombre_usuario: user} : {email: email};
     
     if (!emailOrUser || !password) {
         return res.status(400).json({ ok: false, msg: "email or password not received" })
     }
+    
 
-    Usuario.findOne({ where: { emailOrUser } })
+    Usuario.findOne({ where: emailOrUser })
         .then((usuari) => {
             // bcrypt.compareSync(password, usuari.password)
-            if (usuari) {
+            if (usuari && password === usuari.password) {
                 return usuari;
             } else {
                 throw "usuari/password invalids";
@@ -58,8 +59,8 @@ router.post('/login', (req, res) => {
             response.token = jsonwebtoken.sign(
                 {
                     expiredAt: new Date().getTime() + expiredAfter,
-                    emailOrUser,
                     nombre_usuario: usuari.nombre_usuario,
+                    id: usuari.id
 
                 },
                 secretKey
