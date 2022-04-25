@@ -3,6 +3,7 @@ const model = require('../models/index');
 const multer = require('multer');
 
 const Seguidores = model.Seguidores;
+const Usuario = model.Usuario;
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const router = express.Router();
 
 //GET ALL FOLLOWERS
 router.get('/', (req, res) => {
-        Seguidores.findAll()
+    Seguidores.findAll()
         .then(x => res.status(200).json({ ok: true, data: x }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
@@ -19,8 +20,15 @@ router.get('/', (req, res) => {
 //USER´S FOLLOWERS
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    seguidores.findOne({ where: { id_usuario_seguido: id } })
-        .then(x => res.status(200).json({ ok: true, data: x }))
+    Seguidores.findAll({ where: { id_usuario_seguido: id } })
+        .then(x => {
+            const idFollowers = x.map((come) => {
+                return come.id_seguidor
+            })
+            Usuario.findAll({ where: { id: idFollowers } })
+                .then((y) => res.status(200).json({ ok: true, data: y }))
+
+        })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
@@ -35,7 +43,7 @@ router.get('/delete/:id', (req, res) => {
 
 //CREATE A FOLLOW
 router.post('/seguidor', function (req, res, next) {
-   
+
     Seguidores.create(req.body)
         .then(item => res.json({ ok: true, data: item }))
         .catch((error) => res.json({ ok: false, error }))

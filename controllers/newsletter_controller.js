@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     Newsletter.findAll()
-    .then(x => res.status(200).json({ ok: true, data: x }))
-    .catch(err => res.status(400).json({ ok: false, data: err }))
+        .then(x => res.status(200).json({ ok: true, data: x }))
+        .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
 
@@ -21,16 +21,18 @@ router.post('/filter', (req, res) => {
 
     Usuarios.findOne({ where: { email: email } })
         .then(x => {
-            Newsletter.findAll({where : {id: x.id}}) 
-            .then(y => 
-             res.status(200).json({ ok: true, data: y }) )
+            Newsletter.findAll({ where: { id: x.id } })
+                .then(y =>
+                    res.status(200).json({ ok: true, data: y }))
         })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
-
-
-
-
+//New newsletter register
+router.post('/registro', function (req, res, next) {
+    Newsletter.create(req.body)
+        .then(item => res.json({ ok: true, data: item }))
+        .catch((error) => res.json({ ok: false, error }))
+});
 
 module.exports = router;
