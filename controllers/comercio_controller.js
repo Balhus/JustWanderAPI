@@ -94,7 +94,7 @@ router.post('/new', (req, res, next) => {
                 usuario_creador: req.body.idUser,
                 revisado: 0
             }
-        
+
             let idComercioCreado = 0;
 
             Comercio.create(comercio)
@@ -112,8 +112,8 @@ router.post('/new', (req, res, next) => {
                         )
                     }
                     Foto.bulkCreate(fotos)
-                        //.then(a => res.json({ ok: true, foto: a }))
-                        //.catch(e => res.json({ ok: false, error: e, from: "Foto.BulkCreate" }));
+                    //.then(a => res.json({ ok: true, foto: a }))
+                    //.catch(e => res.json({ ok: false, error: e, from: "Foto.BulkCreate" }));
 
                 })
                 .then(() => {
@@ -132,11 +132,11 @@ router.post('/new', (req, res, next) => {
                     console.log(filters)
                     //Crear filtro create
                     FiltroComercio.bulkCreate(filters)
-                        //.then(a => res.json({ ok: true, filtro: a }))
-                        //.catch(e => res.json({ ok: false, error: e, from: "FiltroComercio.BulkCreate" }));
+                    //.then(a => res.json({ ok: true, filtro: a }))
+                    //.catch(e => res.json({ ok: false, error: e, from: "FiltroComercio.BulkCreate" }));
                 })
                 .then(a => res.json({ ok: true, data: a }))
-                .catch(err => res.status(400).json({ ok: false, data: err}))
+                .catch(err => res.status(400).json({ ok: false, data: err }))
         }
     })
 })

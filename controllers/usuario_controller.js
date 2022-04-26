@@ -26,11 +26,11 @@ router.get('/:id', (req, res) => {
 })
 
 //EDIT A USER
-router.put('/edit/:id',(req,res) => {
+router.put('/edit/:id', (req, res) => {
     const { id } = req.params;
     Usuario.findOne({ where: { id: id } })
-    .then(user => user.update(req.body))
-        .then(() => res.status(200).json({ ok: true}))
+        .then(user => user.update(req.body))
+        .then(() => res.status(200).json({ ok: true }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
@@ -39,12 +39,12 @@ router.post('/login', (req, res) => {
     const response = {};
     const { email, user, password } = req.body;
     //Checks if is by email or user, and sets the one that is given
-    const emailOrUser = email === "" ? {nombre_usuario: user} : {email: email};
-    
+    const emailOrUser = email === "" ? { nombre_usuario: user } : { email: email };
+
     if (!emailOrUser || !password) {
         return res.status(400).json({ ok: false, msg: "email or password not received" })
     }
-    
+
 
     Usuario.findOne({ where: emailOrUser })
         .then((usuari) => {
