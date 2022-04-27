@@ -1,6 +1,7 @@
 const express = require('express');
 const model = require('../models/index');
 const multer = require('multer');
+const { Sequelize } = require('../models/index');
 
 const Seguidores = model.Seguidores;
 const Usuario = model.Usuario;
@@ -34,15 +35,16 @@ router.get('/:id', (req, res) => {
 
 
 //DELETE A FOLLOW
-router.get('/delete/:id', (req, res) => {
-    const { id } = req.params;
-    Seguidores.destroy({ where: { id: id } })
+router.post('/delete', (req, res) => {
+    const { id_usuario_seguido, id_seguidor } = req.body;
+    console.log(id_seguidor, id_usuario_seguido)
+    Seguidores.destroy({ where: Sequelize.and({ id_usuario_seguido: id_usuario_seguido }, { id_seguidor: id_seguidor }) })
         .then(user => res.status(200).json({ ok: true }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
 //CREATE A FOLLOW
-router.post('/seguidor', function (req, res, next) {
+router.post('/new', function (req, res, next) {
 
     Seguidores.create(req.body)
         .then(item => res.json({ ok: true, data: item }))
