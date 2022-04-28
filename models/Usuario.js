@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     feed_check: DataTypes.BOOLEAN,
     ubicacion_check: DataTypes.BOOLEAN,
     activo: DataTypes.INTEGER,
-    foto_perfil: DataTypes.STRING,
+    foto_usuario: DataTypes.STRING,
     rol: DataTypes.INTEGER
 
   }, { tableName: 'usuarios', timestamps: false });
