@@ -153,8 +153,9 @@ router.get('/delete/:id', (req, res) => {
 //FIND a COMMERCE BY userId
 router.get('/user/:id', (req, res) => {
     const { id } = req.params;
+    console.log("user: ", id);
     Comercio.findAll({ where: { usuario_creador: id } })
-        .then(user => res.status(200).json({ ok: true, data: user }))
+        .then(user => { res.status(200).json({ ok: true, data: user }) })
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 

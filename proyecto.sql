@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Temps de generació: 20-04-2022 a les 16:17:09
+-- Temps de generació: 28-04-2022 a les 17:25:23
 -- Versió del servidor: 10.3.15-MariaDB
 -- Versió de PHP: 7.3.6
 
@@ -41,6 +41,22 @@ CREATE TABLE `comercios` (
   `revisado` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Bolcament de dades per a la taula `comercios`
+--
+
+INSERT INTO `comercios` (`id`, `nombre`, `descripcion`, `direccion`, `longitud`, `latitud`, `usuario_creador`, `dueño`, `valoracion`, `revisado`) VALUES
+(1, 'Tienda de Sofia', 'Tienda de cafes del mundo y tes', 'Calle Barcelo n6', '41.67538', '34.9876', 1, NULL, '5', 0),
+(2, '365 Forn', 'Tienda de desayunos', 'Calle la pepa n7', '34.90982', '12.87639', 1, NULL, '4.2', 0),
+(3, 'Tienda de Pepito Grillo', 'Los mejores grillos asados de Barcelona y la costa litoral', 'Calle del cerdo n8', '10.0000', '19.83682', 1, NULL, '3', 0),
+(4, 'Panaderia Griega', 'Panaderia de locos', 'Salònica, Grècia', '22.9444191', '40.6400629', 1, NULL, NULL, 0),
+(5, 'asds', 'kkk', 'Carrer de Blai, 08004 Barcelona, Espanya', '2.164493', '41.3736842', 1, NULL, NULL, 0),
+(6, 'Comercio de prueba', 'Comerico de prueba desde cleopatra', 'C. Marqués de Larios, Málaga, Espanya', '-4.421575', '36.7194687', 3, NULL, NULL, 0),
+(7, 'Comercio de prueba', 'Comerico de prueba desde cleopatra', 'C. Marqués de Larios, Málaga, Espanya', '-4.421575', '36.7194687', 3, NULL, NULL, 0),
+(8, 'Tienda randoms', 'Tienda de cosas randoms', 'Dubai - Dubayy - Emirats Àrabs Units', '55.2707828', '25.2048493', 1, NULL, NULL, 0),
+(9, 'Comercio de fuego', 'Fuego a domicilio, de locos', "Carrer d\'En Llàstics, 6, 08003 Barcelona, Espanya", '2.1795656', '41.3884365', 1, NULL, NULL, 0),
+(10, 'testetes', 'asdkahdoahdo', 'Carrer de la Gran Vista, Barcelona, Espanya', '2.1606749', '41.4202592', 1, NULL, NULL, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +67,15 @@ CREATE TABLE `filtros` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Bolcament de dades per a la taula `filtros`
+--
+
+INSERT INTO `filtros` (`id`, `nombre`) VALUES
+(1, 'Artesanal'),
+(2, 'KM0'),
+(3, 'Vegano');
 
 -- --------------------------------------------------------
 
@@ -64,6 +89,28 @@ CREATE TABLE `filtros_comercios` (
   `id_filtro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Bolcament de dades per a la taula `filtros_comercios`
+--
+
+INSERT INTO `filtros_comercios` (`id`, `id_comercio`, `id_filtro`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(4, 2, 3),
+(5, 2, 2),
+(6, 3, 2),
+(7, 3, 3),
+(8, 4, 1),
+(9, 5, 1),
+(10, 5, 2),
+(11, 5, 3),
+(12, 6, 1),
+(13, 7, 1),
+(14, 8, 1),
+(15, 8, 3),
+(16, 9, 2),
+(17, 10, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -75,6 +122,16 @@ CREATE TABLE `fotos` (
   `idComercio` int(11) DEFAULT NULL,
   `nombre_img` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Bolcament de dades per a la taula `fotos`
+--
+
+INSERT INTO `fotos` (`id`, `idComercio`, `nombre_img`) VALUES
+(1, 7, '1650979907469-PVU fondo.PNG'),
+(2, 8, '1650995201819-andromeda-galaxy-way-ik-1920x1080.jpg'),
+(3, 9, '1651069193781-fire.png'),
+(4, 10, '1651152370470-andromeda-galaxy-way-ik-1920x1080.jpg');
 
 -- --------------------------------------------------------
 
@@ -100,6 +157,18 @@ CREATE TABLE `seguidores` (
   `id_seguidor` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Bolcament de dades per a la taula `seguidores`
+--
+
+INSERT INTO `seguidores` (`id`, `id_usuario_seguido`, `id_seguidor`) VALUES
+(1, 3, 1),
+(2, 3, 2),
+(3, 2, 3),
+(4, 1, 3),
+(5, 1, 2),
+(7, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -113,17 +182,24 @@ CREATE TABLE `usuarios` (
   `email` varchar(60) NOT NULL,
   `nombre_usuario` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `puntuacion` int(11) DEFAULT NULL,
+  `puntuacion` int(11) DEFAULT 0,
   `feed_check` tinyint(4) DEFAULT NULL,
-  `ubicacion_check` tinyint(4) DEFAULT NULL
+  `ubicacion_check` tinyint(4) DEFAULT NULL,
+  `activo` int(11) NOT NULL DEFAULT 0,
+  `foto_usuario` varchar(150) DEFAULT NULL,
+  `rol` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Bolcament de dades per a la taula `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `email`, `nombre_usuario`, `password`, `puntuacion`, `feed_check`, `ubicacion_check`) VALUES
-(1, 'test', 'test', 'test@gmail.com', 'test', '1234', NULL, NULL, NULL);
+INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `email`, `nombre_usuario`, `password`, `puntuacion`, `feed_check`, `ubicacion_check`, `activo`, `foto_usuario`, `rol`) VALUES
+(1, 'test', 'test', 'test@gmail.com', 'test', '1234', 0, NULL, NULL, 1, NULL, 0),
+(2, 'Teresa', 'Almucena', 'teresa@gmail.com', 'TereAlmu', '0987', 0, NULL, NULL, 1, NULL, 0),
+(3, 'Cleopatra', 'Szamud', 'cleo@gmail.com', 'Cleosza', 'cleopatra', 0, NULL, NULL, 1, NULL, 0),
+(4, 'Marc', 'asdasd', 'asd@gmail.com', 'asdass', '$2b$10$ssOam.ldJ8/RtY.77LE4b.XoI49zhoxTyBgcoi', 0, NULL, NULL, 0, NULL, 0),
+(5, 'admin', 'admin', 'admin', 'Administrador', 'admin', 0, NULL, NULL, 1, NULL, 1);
 
 --
 -- Índexs per a les taules bolcades
@@ -187,19 +263,25 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT per la taula `comercios`
 --
 ALTER TABLE `comercios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT per la taula `filtros`
 --
 ALTER TABLE `filtros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la taula `filtros_comercios`
 --
 ALTER TABLE `filtros_comercios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT per la taula `fotos`
+--
+ALTER TABLE `fotos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la taula `newsletter`
@@ -211,13 +293,13 @@ ALTER TABLE `newsletter`
 -- AUTO_INCREMENT per la taula `seguidores`
 --
 ALTER TABLE `seguidores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT per la taula `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restriccions per a les taules bolcades

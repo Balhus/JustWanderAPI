@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     puntuacion: DataTypes.INTEGER,
     feed_check: DataTypes.BOOLEAN,
     ubicacion_check: DataTypes.BOOLEAN,
-    activo: DataTypes.INTEGER
+    activo: DataTypes.INTEGER,
+    foto_perfil: DataTypes.STRING,
+    rol: DataTypes.INTEGER
 
   }, { tableName: 'usuarios', timestamps: false });
 
