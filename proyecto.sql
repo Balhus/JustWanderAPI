@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Temps de generació: 28-04-2022 a les 17:25:23
+-- Temps de generació: 28-04-2022 a les 21:31:43
 -- Versió del servidor: 10.3.15-MariaDB
 -- Versió de PHP: 7.3.6
 
@@ -165,9 +165,9 @@ INSERT INTO `seguidores` (`id`, `id_usuario_seguido`, `id_seguidor`) VALUES
 (1, 3, 1),
 (2, 3, 2),
 (3, 2, 3),
-(4, 1, 3),
 (5, 1, 2),
-(7, 2, 1);
+(8, 2, 1),
+(10, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -200,6 +200,19 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `email`, `nombre_usuario`, 
 (3, 'Cleopatra', 'Szamud', 'cleo@gmail.com', 'Cleosza', 'cleopatra', 0, NULL, NULL, 1, NULL, 0),
 (4, 'Marc', 'asdasd', 'asd@gmail.com', 'asdass', '$2b$10$ssOam.ldJ8/RtY.77LE4b.XoI49zhoxTyBgcoi', 0, NULL, NULL, 0, NULL, 0),
 (5, 'admin', 'admin', 'admin', 'Administrador', 'admin', 0, NULL, NULL, 1, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `valoraciones`
+--
+
+CREATE TABLE `valoraciones` (
+  `id` int(11) NOT NULL,
+  `valoracion` int(11) NOT NULL,
+  `idUsuario` int(11) NOT NULL,
+  `idComercio` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Índexs per a les taules bolcades
@@ -256,6 +269,14 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índexs per a la taula `valoraciones`
+--
+ALTER TABLE `valoraciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_id_usuario_valoraciones_idx` (`idUsuario`),
+  ADD KEY `fk_id_comercios_valoraciones_idx` (`idComercio`);
+
+--
 -- AUTO_INCREMENT per les taules bolcades
 --
 
@@ -293,13 +314,19 @@ ALTER TABLE `newsletter`
 -- AUTO_INCREMENT per la taula `seguidores`
 --
 ALTER TABLE `seguidores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT per la taula `usuarios`
 --
 ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT per la taula `valoraciones`
+--
+ALTER TABLE `valoraciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restriccions per a les taules bolcades
@@ -337,6 +364,13 @@ ALTER TABLE `newsletter`
 ALTER TABLE `seguidores`
   ADD CONSTRAINT `fk_seguido` FOREIGN KEY (`id_usuario_seguido`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_seguidor` FOREIGN KEY (`id_seguidor`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Restriccions per a la taula `valoraciones`
+--
+ALTER TABLE `valoraciones`
+  ADD CONSTRAINT `fk_id_comercios_valoraciones` FOREIGN KEY (`idComercio`) REFERENCES `comercios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_id_usuario_valoraciones` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
