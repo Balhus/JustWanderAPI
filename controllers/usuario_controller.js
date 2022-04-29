@@ -60,8 +60,8 @@ router.post('/login', (req, res) => {
                 {
                     expiredAt: new Date().getTime() + expiredAfter,
                     nombre_usuario: usuari.nombre_usuario,
-                    id: usuari.id
-
+                    id: usuari.id,
+                    rol: usuari.rol
                 },
                 secretKey
             );
