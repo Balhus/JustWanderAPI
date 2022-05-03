@@ -6,6 +6,7 @@ const Comercio = model.Comercio;
 const Foto = model.Foto;
 const FiltroComercio = model.FiltroComercio;
 const Filtro = model.Filtro;
+const Valoracion = model.Valoracion;
 
 const router = express.Router();
 
@@ -157,6 +158,13 @@ router.get('/user/:id', (req, res) => {
     Comercio.findAll({ where: { usuario_creador: id } })
         .then(user => { res.status(200).json({ ok: true, data: user }) })
         .catch(err => res.status(400).json({ ok: false, data: err }))
+})
+
+//RATE a commerce
+router.get('/valorar',(req,res) =>{
+    Valoracion.create(req.body)
+    .then(item => res.json({ ok: true, data: item }))
+    .catch((error) => res.json({ ok: false, error }))
 })
 
 
