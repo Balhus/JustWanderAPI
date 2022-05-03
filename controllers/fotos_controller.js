@@ -16,10 +16,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('file');
 
 
-
-
 router.get('/', async (req, res, next) => {
     Foto.findAll()
+        .then(lista => res.json({ ok: true, data: lista }))
+        .catch(err => res.json({ ok: false, error: err }));
+});
+
+router.get('/:id', async (req, res, next) => {
+    Foto.findAll({ where: { idComercio: req.params.id } })
         .then(lista => res.json({ ok: true, data: lista }))
         .catch(err => res.json({ ok: false, error: err }));
 });

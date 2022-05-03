@@ -161,11 +161,16 @@ router.get('/user/:id', (req, res) => {
 })
 
 //RATE a commerce
-router.get('/valorar',(req,res) =>{
+router.get('/valorar', (req, res) => {
     Valoracion.create(req.body)
-    .then(item => res.json({ ok: true, data: item }))
-    .catch((error) => res.json({ ok: false, error }))
+        .then(response => {
+            //Update puntuacion user
+            //Get user, i update
+        })
+        .then(item => res.json({ ok: true, data: item }))
+        .catch((error) => res.json({ ok: false, error }))
 })
+
 
 
 module.exports = router;
