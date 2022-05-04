@@ -211,7 +211,8 @@ CREATE TABLE `valoraciones` (
   `id` int(11) NOT NULL,
   `valoracion` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
-  `idComercio` int(11) NOT NULL
+  `idComercio` int(11) NOT NULL,
+  `votado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
