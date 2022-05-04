@@ -7,6 +7,7 @@ const Foto = model.Foto;
 const FiltroComercio = model.FiltroComercio;
 const Filtro = model.Filtro;
 const Valoracion = model.Valoracion;
+const Usuario = model.Usuario;
 
 const router = express.Router();
 
@@ -161,14 +162,58 @@ router.get('/user/:id', (req, res) => {
 })
 
 //RATE a commerce
-router.get('/valorar', (req, res) => {
+router.post('/valorar', (req, res) => {
+    let numVals = 0;
+    let total = 0;
+    let idUsuario = 0;
+    let newValoracion = 0;
     Valoracion.create(req.body)
         .then(response => {
             //Update puntuacion user
-            //Get user, i update
+            Valoracion.findAll({ where: { idComercio: req.body.idComercio } })
+                .then(resp => {
+                    numVals = resp.length;
+                    Array.from(resp).forEach((el) => {
+                        total += el.valoracion;
+                    })
+                    console.log(total)
+                    Comercio.findOne({ where: { id: req.body.idComercio } })
+                        .then(com => {
+                            //Getting the id of the creator of the user
+                            idUsuario = com.usuario_creador;
+                            //Valoracion logic
+                            
+                            if (com.puntuacion === null) {
+                                newValoracion = req.body.valoracion;
+                            } else {
+                                newValoracion = (total) / numVals;
+                            }
+                            com.update({ valoracion: newValoracion })
+                            
+                        })
+                        .then(() => {
+                            Usuario.findOne({ where: { id: idUsuario } })
+                                .then(user => {
+                                    let newPuntuacion = 0;
+                                    console.log(req.body.valoracion)
+                                    if (user.puntuacion === null) {
+                                        newPuntuacion += parseInt(req.body.valoracion);
+                                    } else {
+                                        newPuntuacion = user.puntuacion + parseInt(req.body.valoracion);
+                                    }
+                                    user.update({ puntuacion: newPuntuacion })
+                                })
+                        })
+                        .then(x => res.status(200).json({ ok: true, data: newValoracion }))
+                        .catch(err => res.status(400).json({ ok: false, data: err }))
+                })
+
+            // .then(() => res.status(200).json({ ok: true }))
+            //.catch(err => res.status(400).json({ ok: false, data: err }))
+            //Get user, and update
         })
-        .then(item => res.json({ ok: true, data: item }))
-        .catch((error) => res.json({ ok: false, error }))
+    // .then(item => res.json({ ok: true, data: item }))
+    // .catch((error) => res.json({ ok: false, error }))
 })
 
 
