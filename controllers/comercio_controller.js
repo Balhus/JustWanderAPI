@@ -1,6 +1,7 @@
 const express = require('express');
 const model = require('../models/index');
 const multer = require('multer');
+const { Sequelize } = require('../models/index');
 
 const Comercio = model.Comercio;
 const Foto = model.Foto;
@@ -167,6 +168,7 @@ router.post('/valorar', (req, res) => {
     let total = 0;
     let idUsuario = 0;
     let newValoracion = 0;
+
     Valoracion.create(req.body)
         .then(response => {
             //Update puntuacion user
@@ -182,14 +184,14 @@ router.post('/valorar', (req, res) => {
                             //Getting the id of the creator of the user
                             idUsuario = com.usuario_creador;
                             //Valoracion logic
-                            
+
                             if (com.puntuacion === null) {
                                 newValoracion = req.body.valoracion;
                             } else {
                                 newValoracion = (total) / numVals;
                             }
                             com.update({ valoracion: newValoracion })
-                            
+
                         })
                         .then(() => {
                             Usuario.findOne({ where: { id: idUsuario } })
@@ -214,6 +216,26 @@ router.post('/valorar', (req, res) => {
         })
     // .then(item => res.json({ ok: true, data: item }))
     // .catch((error) => res.json({ ok: false, error }))
+})
+
+//get the valoration of an user of a commerce
+router.post('/valoracionUsuario', (req, res) => {
+    Valoracion.findOne({ where: Sequelize.and({ idComercio: req.body.idComercio }, { idUsuario: req.body.idUsuario }) })
+        .then(x => res.status(200).json({ ok: true, data: x  }))
+        .catch(err => res.status(400).json({ ok: false, data: err }))
+})
+
+//Get the number of valorations of a commerce
+router.post('/valoracion/all', (req, res) => {
+    let numRegisters = 0;
+
+    Valoracion.findAll({ where: { idComercio: req.body.idComercio } })
+        .then(resp => {
+            console.log(resp.length);
+            numRegisters = resp.length
+            res.status(200).json({ ok: true, numVotos: numRegisters })
+        })
+        .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
 
