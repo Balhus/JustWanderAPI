@@ -25,7 +25,11 @@ const upload = multer({ storage: storage }).array('files');
 
 //GET ALL COMMERCE
 router.get('/', (req, res) => {
-    Comercio.findAll()
+    Comercio.findAll({
+        order: [
+            ['id', 'DESC'],
+        ]
+    })
         .then(x => res.status(200).json({ ok: true, data: x }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
@@ -221,7 +225,7 @@ router.post('/valorar', (req, res) => {
 //get the valoration of an user of a commerce
 router.post('/valoracionUsuario', (req, res) => {
     Valoracion.findOne({ where: Sequelize.and({ idComercio: req.body.idComercio }, { idUsuario: req.body.idUsuario }) })
-        .then(x => res.status(200).json({ ok: true, data: x  }))
+        .then(x => res.status(200).json({ ok: true, data: x }))
         .catch(err => res.status(400).json({ ok: false, data: err }))
 })
 
