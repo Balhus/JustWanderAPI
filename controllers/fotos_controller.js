@@ -29,7 +29,8 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.post('/getFotosId', async (req, res, next) => {
-    Foto.findAll({ where: { idComercio: req.body.id } })
+    const { id } = req.body;
+    Foto.findAll({ where: { idComercio: id } })
         .then(lista => res.json({ ok: true, data: lista }))
         .catch(err => res.json({ ok: false, error: err }));
 });
