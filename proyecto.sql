@@ -232,6 +232,7 @@ CREATE TABLE `valoraciones` (
   `valoracion` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
   `idComercio` int(11) NOT NULL,
+  `votado` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_id_usuario_valoraciones_idx` (`idUsuario`),
   KEY `fk_id_comercios_valoraciones_idx` (`idComercio`),
