@@ -66,7 +66,9 @@ router.get('/filtrosComercio/:id', (req, res) => {
 router.post('/filtrar', (req, res) => {
     const { id } = req.body;
     console.log(id)
-    FiltroComercio.findAll({ where: { id_filtro: id } })
+    FiltroComercio.findAll({ where: { id_filtro: id },
+    group:'id_comercio',
+    having: Sequelize.literal(`count(*) = ${id.length}`), })
         .then(x => {
             const idComercios = x.map((come) => {
                 return come.id_comercio
