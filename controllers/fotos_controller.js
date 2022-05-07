@@ -28,4 +28,12 @@ router.get('/:id', async (req, res, next) => {
         .catch(err => res.json({ ok: false, error: err }));
 });
 
+router.post('/getFotosId', async (req, res, next) => {
+    const { id } = req.body;
+
+    Foto.findAll({ where: { idComercio: id } })
+        .then(lista => res.json({ ok: true, data: lista }))
+        .catch(err => res.json({ ok: false, error: err }));
+});
+
 module.exports = router;
