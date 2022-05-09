@@ -120,7 +120,7 @@ router.post('/login', (req, res) => {
 //REGISTER A USER
 router.post('/registro', function (req, res, next) {
     const hash = bcrypt.hashSync(req.body.password, 10);
-    req.body.password = hash;
+    //req.body.password = hash;
     Usuario.create(req.body)
         .then(item => res.json({ ok: true, data: item }))
         .catch((error) => res.json({ ok: false, error }))
