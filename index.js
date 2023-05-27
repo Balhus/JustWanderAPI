@@ -34,3 +34,5 @@ app.use('/api/fotos', fotosController);
 
 const port = 3030
 app.listen(port, () => console.log(`Express en puerto ${port}!`))
+
+module.exports = app;
